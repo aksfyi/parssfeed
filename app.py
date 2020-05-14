@@ -12,7 +12,7 @@ fch.getData()
 def root():
     if request.method == 'GET':
         finalResponse = {}
-        finalResponse['api_source'] = 'https://github.com/aksty/feedapi'
+        finalResponse['api_source'] = 'https://github.com/aksty/parssfeed'
         app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
         pretty = request.args.get('pretty')
         urlreq = request.args.get('url')
@@ -49,7 +49,7 @@ def apiroute(rt):
                 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
         if rt.strip() == "feed":
             finalResponse = {}
-            finalResponse['api_source'] = 'https://github.com/aksty/feedapi'
+            finalResponse['api_source'] = 'https://github.com/aksty/parssfeed'
             finalResponse['feed_sources'] = fch.configs['sources']
             page = request.args.get('page')
             query = request.args.get('q')
@@ -84,7 +84,7 @@ def apiroute(rt):
             return jsonify(finalResponse)
         elif rt.strip() in fch.configs['sources'].keys():
             finalResponse = dict()
-            finalResponse['api_source'] = 'https://github.com/aksty/feedapi'
+            finalResponse['api_source'] = 'https://github.com/aksty/parssfeed'
             finalResponse['feed_sources'] = fch.configs['sources']
             page = request.args.get('page')
             query = request.args.get('q')
