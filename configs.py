@@ -1,4 +1,4 @@
-{
+configs = {
   "api_url": "YOUR_API_URL",
   "sources": {
     "source_1" : "source1_feed_url",

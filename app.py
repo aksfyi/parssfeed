@@ -10,7 +10,9 @@ fch.getData()
 
 @app.route('/', methods=['GET'])
 def root():
+
     if request.method == 'GET':
+
         finalResponse = {}
         finalResponse['api_source'] = 'https://github.com/aksty/parssfeed'
         app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
@@ -18,6 +20,7 @@ def root():
         urlreq = request.args.get('url')
         page = request.args.get('page')
         query = request.args.get('q')
+
         if pretty is not None:
             if pretty == "1" or pretty.lower() == "true":
                 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
@@ -41,9 +44,12 @@ def root():
 
 @app.route('/<string:rt>', methods=['GET'])
 def apiroute(rt):
+
     if request.method == 'GET':
+
         pretty = request.args.get('pretty')
         app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
+
         if pretty is not None:
             if pretty == "1" or pretty.lower() == "true":
                 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
@@ -59,7 +65,7 @@ def apiroute(rt):
                 page = int(page)
             ltst = "feed" if fch.configs['api_url'][-1] == '/' else "/feed"
             if query is not None:
-                res = fch.searchFilter(fch.newlist, query)
+                res = fch.searchFilter(fch.finallist, query)
                 totalPages = int(len(res) / fch.configs['itemsPerPage'])
                 mod = len(res) % fch.configs['itemsPerPage']
                 if mod > 0:
@@ -68,7 +74,7 @@ def apiroute(rt):
                 finalResponse['next'] = fch.configs['api_url'] + ltst + '?page=' + str(page + 1) + '&q=' + query if int(
                     totalPages) > page else "end"
             else:
-                res = fch.newlist
+                res = fch.finallist
                 totalPages = len(res) / fch.configs['itemsPerPage']
                 mod = len(res) % fch.configs['itemsPerPage']
                 if mod > 0:
@@ -100,7 +106,7 @@ def apiroute(rt):
             if query is None:
                 query = ""
             cacheflag = True if page == 1 or page == 2 or page == -1 else False
-            res = fch.specSource(fch.configs['sources'][rt.strip()], page, query,cacheflag)
+            res = fch.specSource(fch.configs['sources'][rt.strip()], page, query, cacheflag)
             finalResponse['feedResults'] = res
             finalResponse['source_info'] = fch.channelinfo(fch.configs['sources'][rt.strip()])
             if len(finalResponse['feedResults']) == 0:
