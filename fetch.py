@@ -49,7 +49,7 @@ def getData():
         executor.map(newListInit, urllist)
     newlist = sorted(newlist, key=lambda k: getTimestamp(k['published']), reverse=True)
     finallist = newlist
-    t = threading.Timer(100, getData)
+    t = threading.Timer(660, getData)
     t.start()
 
 

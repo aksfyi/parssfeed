@@ -1,13 +1,10 @@
 # requests : to request content from feed
 import requests
-import os
-
-# os.environ['TZ'] = 'Egypt'
 
 # beautiful soup to parse xml
 from bs4 import BeautifulSoup
 
-#to convert published-timestamp
+# to convert published-timestamp
 import time
 from dateutil.parser import parse
 
@@ -180,18 +177,22 @@ class feedToJSON:
             imgfind = descsoup.find('img')
             newsd['image'] = '' if imgfind is None else imgfind['src']
             newsd['fulldesc'] = description.text
+            newsd['source'] = self.channelinfo()['title']
+
             for el in ['div', 'img', 'a']:
                 for p in descsoup.findAll(el):
                     p.extract()
             newsd['desc'] = '' if description is None else descsoup.text.strip()
+
             for category in categories:
                 if self.feedtype == feedToJSON.atomkeys:
                     tags.append(category['term'].lower())
                 else:
                     tags.append(category.text.lower())
+
             newsd['tags'] = tags
             newsd['published'] = '' if publishedDate is None else time.strftime("%Y-%m-%dT%H:%M:%SZ", parse(
-                    publishedDate.text.strip()).timetuple())
+                publishedDate.text.strip()).timetuple())
             newsd['author'] = '' if author is None else author.text.strip()
             feedlist.append(newsd)
         return feedlist
