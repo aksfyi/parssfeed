@@ -10,7 +10,6 @@ fch.getData()
 
 @app.route('/', methods=['GET'])
 def root():
-
     if request.method == 'GET':
 
         finalResponse = {}
@@ -35,8 +34,12 @@ def root():
             if len(finalResponse['feedResults']) == 0:
                 finalResponse['feedResults'] = {'message': 'No results'}
                 return jsonify(finalResponse), 404
-            if 'error' in finalResponse['feedResults'].keys():
-                return jsonify(finalResponse), 404
+            print(finalResponse['feedResults'])
+            try:
+                if finalResponse['feedResults']['error']:
+                    return jsonify(finalResponse), 400
+            except Exception as e:
+                pass
             return jsonify(finalResponse)
         finalResponse['feed_sources'] = fch.configs['sources']
         return jsonify(finalResponse)
@@ -44,7 +47,6 @@ def root():
 
 @app.route('/<string:rt>', methods=['GET'])
 def apiroute(rt):
-
     if request.method == 'GET':
 
         pretty = request.args.get('pretty')
@@ -114,7 +116,7 @@ def apiroute(rt):
                 return jsonify(finalResponse), 404
             return jsonify(finalResponse)
         else:
-            return jsonify({'error': 'invalid request'}), 404
+            return jsonify({'error': 'invalid request'}), 400
 
 
 if __name__ == '__main__':
