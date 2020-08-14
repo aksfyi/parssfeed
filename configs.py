@@ -1,3 +1,20 @@
+
+configs = {
+  "api_url": "YOUR_API_URL",
+  "sources": {
+    "source_1" : "source1_feed_url",
+    "source_2":"source2_feed_url",
+    "source_3" : "source3_feed_url"
+
+  },
+  "itemsPerPage" : 10
+}
+
+
+
+'''
+Example configs.py
+
 configs = {
     "api_url": "http://API_URL",
     "sources": {
@@ -9,3 +26,5 @@ configs = {
     },
     "itemsPerPage": 6
 }
+
+'''
