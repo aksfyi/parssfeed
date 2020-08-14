@@ -176,20 +176,16 @@ class feedToJSON:
 
             imgfind = descsoup.find('img')
             newsd['image'] = '' if imgfind is None else imgfind['src']
-            newsd['fulldesc'] = description.text
             newsd['source'] = self.channelinfo()['title']
-
             for el in ['div', 'img', 'a']:
                 for p in descsoup.findAll(el):
                     p.extract()
             newsd['desc'] = '' if description is None else descsoup.text.strip()
-
             for category in categories:
                 if self.feedtype == feedToJSON.atomkeys:
                     tags.append(category['term'].lower())
                 else:
                     tags.append(category.text.lower())
-
             newsd['tags'] = tags
             newsd['published'] = '' if publishedDate is None else time.strftime("%Y-%m-%dT%H:%M:%SZ", parse(
                 publishedDate.text.strip()).timetuple())

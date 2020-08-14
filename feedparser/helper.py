@@ -1,11 +1,10 @@
-from feedFetch import feedToJSON
+from feedparser.feedFetch import feedToJSON
 import requests_cache
 import time
 import concurrent.futures
 from dateutil.parser import parse
 import threading
 import configs as cf
-
 
 # to use configs.json from external source
 # import requests
@@ -15,7 +14,6 @@ requests_cache.install_cache('feedscache', backend='sqlite', expire_after=1200)
 # using configs from configs.py
 configs = cf.configs
 
-
 ###########
 # using configs.json from external source
 # r = requests.get("CONFIGS.JSON URL")
@@ -23,12 +21,12 @@ configs = cf.configs
 
 urllist = configs['sources'].values()
 
-
-#feedList refreshed every 660 seconds
+# feedList refreshed every 660 seconds
 newlist = []
 
-#final feed List (updates with newlist)
+# final feed List (updates with newlist)
 finallist = []
+
 
 def getTimestamp(pubdate):
     parsedDate = parse(pubdate)
@@ -43,7 +41,7 @@ def newListInit(urll):
 
 
 def getData():
-    global newlist,finallist
+    global newlist, finallist
     newlist = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(newListInit, urllist)
