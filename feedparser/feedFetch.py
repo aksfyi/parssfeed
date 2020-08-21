@@ -92,10 +92,12 @@ class feedToJSON:
                 self.checktype(channelsoup)
 
                 channelTitle = channelsoup.find(self.feedtype['channelTitle'])
-                channelDesc = channelsoup.find(self.feedtype['channelDescription'])
+                channelDesc = channelsoup.find(
+                    self.feedtype['channelDescription'])
                 channelLink = channelsoup.find(self.feedtype['channelLink'])
                 imageFind = channelsoup.find(self.feedtype['channelImage'])
-                lastUpdated = channelsoup.find(self.feedtype['channelLastUpdate'])
+                lastUpdated = channelsoup.find(
+                    self.feedtype['channelLastUpdate'])
                 sourceinfo['lastUpdated'] = '' if lastUpdated is None else time.strftime("%Y-%m-%dT%H:%M:%SZ", parse(
                     lastUpdated.text.strip()).timetuple())
 
@@ -109,18 +111,21 @@ class feedToJSON:
                         sourceinfo['link'] = ''
                 except:
                     sourceinfo['link'] = ''
-                sourceinfo['title'] = '' if channelTitle is None else channelTitle.text.strip()
+                sourceinfo['title'] = '' if channelTitle is None else channelTitle.text.strip(
+                )
                 if imageFind is None:
                     sourceinfo['image'] = ''
                 else:
                     try:
                         if self.feedtype == feedToJSON.rsskeys:
-                            sourceinfo['image'] = imageFind.find('url').text.strip()
+                            sourceinfo['image'] = imageFind.find(
+                                'url').text.strip()
                         else:
                             sourceinfo['image'] = imageFind.text.strip()
                     except:
                         sourceinfo['image'] = ""
-                sourceinfo['desc'] = "" if channelDesc is None else channelDesc.text.strip()
+                sourceinfo['desc'] = "" if channelDesc is None else channelDesc.text.strip(
+                )
                 return sourceinfo
 
         except Exception as e:
@@ -137,10 +142,12 @@ class feedToJSON:
 
         try:
             if self.cacheFlag == True:
-                feedreq = requests.get(self.url, headers=feedToJSON.headers, params=params)
+                feedreq = requests.get(
+                    self.url, headers=feedToJSON.headers, params=params)
             else:
                 with requests_cache.disabled():
-                    feedreq = requests.get(self.url, headers=feedToJSON.headers, params=params)
+                    feedreq = requests.get(
+                        self.url, headers=feedToJSON.headers, params=params)
         except Exception as e:
             return {'error': str(e)}
 
@@ -153,7 +160,10 @@ class feedToJSON:
         items = items if self.noItems == 0 else items[0:self.noItems]
 
         for item in items:
+            '''
+            news items
 
+            '''
             newsd = dict()
             tags = list()
 
@@ -176,12 +186,20 @@ class feedToJSON:
 
             imgfind = descsoup.find('img')
             newsd['image'] = '' if imgfind is None else imgfind['src']
+            if imgfind is None:
+                media = item.find('media:content')
+                imgg = None if media is None else media['url']
+                newsd['image'] = '' if imgg is None else imgg
+
             newsd['source'] = self.channelinfo()['title']
             for el in ['div', 'img', 'a']:
                 for p in descsoup.findAll(el):
                     p.extract()
-            lastparagraph = descsoup.find_all('p')[-1]
-            lastparagraph.extract()
+            try:
+                lastparagraph = descsoup.find_all('p')[-1]
+                lastparagraph.extract()
+            except:
+                pass
             newsd['desc'] = '' if description is None else descsoup.text.strip()
             for category in categories:
                 if self.feedtype == feedToJSON.atomkeys:
