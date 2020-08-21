@@ -180,6 +180,8 @@ class feedToJSON:
             for el in ['div', 'img', 'a']:
                 for p in descsoup.findAll(el):
                     p.extract()
+            lastparagraph = descsoup.find_all('p')[-1]
+            lastparagraph.extract()
             newsd['desc'] = '' if description is None else descsoup.text.strip()
             for category in categories:
                 if self.feedtype == feedToJSON.atomkeys:
